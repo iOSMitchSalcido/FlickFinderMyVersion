@@ -14,6 +14,7 @@
 		861A07C01E7FEF7500C85FFB /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 861A07BE1E7FEF7500C85FFB /* LaunchScreen.storyboard */; };
 		861A07CB1E7FEF7500C85FFB /* FlickFinderMyVersionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 861A07CA1E7FEF7500C85FFB /* FlickFinderMyVersionTests.swift */; };
 		861A07D61E7FEF7500C85FFB /* FlickFinderMyVersionUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 861A07D51E7FEF7500C85FFB /* FlickFinderMyVersionUITests.swift */; };
+		861A07E41E8024AA00C85FFB /* LocationsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 861A07E31E8024AA00C85FFB /* LocationsViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -47,6 +48,7 @@
 		861A07D11E7FEF7500C85FFB /* FlickFinderMyVersionUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FlickFinderMyVersionUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		861A07D51E7FEF7500C85FFB /* FlickFinderMyVersionUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlickFinderMyVersionUITests.swift; sourceTree = "<group>"; };
 		861A07D71E7FEF7500C85FFB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		861A07E31E8024AA00C85FFB /* LocationsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationsViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -99,6 +101,7 @@
 			children = (
 				861A07B51E7FEF7500C85FFB /* AppDelegate.swift */,
 				861A07B71E7FEF7500C85FFB /* ViewController.swift */,
+				861A07E31E8024AA00C85FFB /* LocationsViewController.swift */,
 				861A07B91E7FEF7500C85FFB /* Main.storyboard */,
 				861A07BC1E7FEF7500C85FFB /* Assets.xcassets */,
 				861A07BE1E7FEF7500C85FFB /* LaunchScreen.storyboard */,
@@ -193,6 +196,7 @@
 				TargetAttributes = {
 					861A07B11E7FEF7500C85FFB = {
 						CreatedOnToolsVersion = 8.2.1;
+						DevelopmentTeam = FN5VW63KQX;
 						ProvisioningStyle = Automatic;
 					};
 					861A07C51E7FEF7500C85FFB = {
@@ -261,6 +265,7 @@
 			files = (
 				861A07B81E7FEF7500C85FFB /* ViewController.swift in Sources */,
 				861A07B61E7FEF7500C85FFB /* AppDelegate.swift in Sources */,
+				861A07E41E8024AA00C85FFB /* LocationsViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -410,6 +415,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = FN5VW63KQX;
 				INFOPLIST_FILE = FlickFinderMyVersion/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.mitchsalcido.FlickFinderMyVersion;
@@ -422,6 +428,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = FN5VW63KQX;
 				INFOPLIST_FILE = FlickFinderMyVersion/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.mitchsalcido.FlickFinderMyVersion;
