@@ -15,6 +15,7 @@
 		861A07CB1E7FEF7500C85FFB /* FlickFinderMyVersionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 861A07CA1E7FEF7500C85FFB /* FlickFinderMyVersionTests.swift */; };
 		861A07D61E7FEF7500C85FFB /* FlickFinderMyVersionUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 861A07D51E7FEF7500C85FFB /* FlickFinderMyVersionUITests.swift */; };
 		861A07E41E8024AA00C85FFB /* LocationsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 861A07E31E8024AA00C85FFB /* LocationsViewController.swift */; };
+		86EC4D0C1E80B61800361B69 /* FlickrAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86EC4D0B1E80B61800361B69 /* FlickrAPI.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -49,6 +50,7 @@
 		861A07D51E7FEF7500C85FFB /* FlickFinderMyVersionUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlickFinderMyVersionUITests.swift; sourceTree = "<group>"; };
 		861A07D71E7FEF7500C85FFB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		861A07E31E8024AA00C85FFB /* LocationsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationsViewController.swift; sourceTree = "<group>"; };
+		86EC4D0B1E80B61800361B69 /* FlickrAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FlickrAPI.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -102,6 +104,7 @@
 				861A07B51E7FEF7500C85FFB /* AppDelegate.swift */,
 				861A07B71E7FEF7500C85FFB /* ViewController.swift */,
 				861A07E31E8024AA00C85FFB /* LocationsViewController.swift */,
+				86EC4D0B1E80B61800361B69 /* FlickrAPI.swift */,
 				861A07B91E7FEF7500C85FFB /* Main.storyboard */,
 				861A07BC1E7FEF7500C85FFB /* Assets.xcassets */,
 				861A07BE1E7FEF7500C85FFB /* LaunchScreen.storyboard */,
@@ -266,6 +269,7 @@
 				861A07B81E7FEF7500C85FFB /* ViewController.swift in Sources */,
 				861A07B61E7FEF7500C85FFB /* AppDelegate.swift in Sources */,
 				861A07E41E8024AA00C85FFB /* LocationsViewController.swift in Sources */,
+				86EC4D0C1E80B61800361B69 /* FlickrAPI.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -510,6 +514,7 @@
 				861A07DC1E7FEF7500C85FFB /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		861A07DD1E7FEF7500C85FFB /* Build configuration list for PBXNativeTarget "FlickFinderMyVersionTests" */ = {
 			isa = XCConfigurationList;
@@ -518,6 +523,7 @@
 				861A07DF1E7FEF7500C85FFB /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		861A07E01E7FEF7500C85FFB /* Build configuration list for PBXNativeTarget "FlickFinderMyVersionUITests" */ = {
 			isa = XCConfigurationList;
@@ -526,6 +532,7 @@
 				861A07E21E7FEF7500C85FFB /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
