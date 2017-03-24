@@ -19,6 +19,7 @@ class ViewController: UIViewController {
     @IBOutlet weak var phraseSearchButton: UIButton!
     @IBOutlet weak var locationsButton: UIButton!
     @IBOutlet weak var geoSearchButton: UIButton!
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     
     let api = FlickrAPI()
     
@@ -31,6 +32,7 @@ class ViewController: UIViewController {
         super.viewWillAppear(animated)
         
         beginKeyboardNotifications()
+        activityIndicator.isHidden = true
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -42,11 +44,48 @@ class ViewController: UIViewController {
     @IBAction func phraseSearchButtonPressed(_ sender: UIButton) {
         
         if !(phraseTextField.text?.isEmpty)! {
+            
+            enableUIState(false)
+            
+            activityIndicator.isHidden = false
+            activityIndicator.startAnimating()
+            flickImageView.alpha = 0.5
+            
             api.searchForFlick(phrase: phraseTextField.text!, bbox: nil) {
                 (error, images) in
                 
-                if error == nil {
-                    print("data task completed successfully")
+                if let error = error {
+                    
+                    var alertTitle = "Unknown error"
+                    var alertMessage = ""
+                    switch error {
+                    case .searchItems(let value):
+                        alertTitle = "Search Items Error"
+                        alertMessage = value
+                        break
+                    case .dataTask(let value):
+                        alertTitle = "Network error"
+                        alertMessage = value
+                        break
+                    }
+                    
+                    let alert = UIAlertController(title: alertTitle,
+                                                  message: alertMessage,
+                                                  preferredStyle: .alert)
+                    let action = UIAlertAction(title: "OK",
+                                               style: .cancel,
+                                               handler: nil)
+                    
+                    alert.addAction(action)
+                    
+                    DispatchQueue.main.async {
+                        self.present(alert,
+                                     animated: true,
+                                     completion: nil)
+                    }
+                }
+                else {
+                    
                     let dict = images?.last
                     for (key, value) in  dict! {
                         
@@ -57,8 +96,13 @@ class ViewController: UIViewController {
                         }
                     }
                 }
-                else {
-                    print("error during data task")
+                
+                //dispatch
+                DispatchQueue.main.async {
+                    self.enableUIState(true)
+                    self.activityIndicator.stopAnimating()
+                    self.activityIndicator.isHidden = true
+                    self.flickImageView.alpha = 1.0
                 }
             }
         }
@@ -129,5 +173,14 @@ extension ViewController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         return true
+    }
+}
+
+extension ViewController {
+    
+    func enableUIState(_ enable: Bool) {
+        self.phraseSearchButton.isEnabled = enable
+        self.geoSearchButton.isEnabled = enable
+        self.locationsButton.isEnabled = enable
     }
 }

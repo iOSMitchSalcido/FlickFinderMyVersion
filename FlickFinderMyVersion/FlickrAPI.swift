@@ -51,8 +51,6 @@ extension FlickrAPI {
     
     fileprivate func flickrSearch(_ params: [String: String], completion: @escaping (Errors?, [[String:UIImage]]?) -> Void) {
         
-        print(urlForMethods(params))
-        
         let request = urlForMethods(params)
         let task = URLSession.shared.dataTask(with: request) {
             (data, response, error) in
@@ -89,17 +87,31 @@ extension FlickrAPI {
             
             // good data
             
+            guard let photosDictionary = jsonData["photos"] as? [String: AnyObject] else {
+                completion(Errors.dataTask("No Flicks returned from Flickr."), nil)
+                return
+            }
+            
             // test if page was in search params
             if params["page"] == nil {
+                
                 // page not in search params..get a random page, new search with random page
+                guard let pages = photosDictionary["pages"] as? Int,
+                    let perPage = photosDictionary["perpage"] as? Int else {
+                        completion(Errors.dataTask("No Flicks returned from Flickr."), nil)
+                        return
+                }
+                let pageLimit = min(pages, 4000 / perPage)
+                let randomPage = Int(arc4random_uniform(UInt32(pageLimit))) + 1
+
                 var searchWithPageParams = params
-                searchWithPageParams["page"] = "1"
+                searchWithPageParams["page"] = "\(randomPage)"
+                searchWithPageParams["perpage"] = "\(perPage)"
                 self.flickrSearch(searchWithPageParams, completion: completion)
             }
             else {
                 
-                guard let photosDictionary = jsonData["photos"] as? [String: AnyObject],
-                    let photoArray = photosDictionary["photo"] as? [[String: AnyObject]] else {
+                guard let photoArray = photosDictionary["photo"] as? [[String: AnyObject]] else {
                     completion(Errors.dataTask("No Flicks returned from Flickr"), nil)
                     return
                 }

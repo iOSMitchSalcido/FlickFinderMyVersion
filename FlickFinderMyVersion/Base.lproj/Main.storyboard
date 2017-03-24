@@ -25,9 +25,25 @@
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="bzq-M6-AWg">
                                 <rect key="frame" x="16" y="64" width="288" height="496"/>
                                 <subviews>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="DefaultImage" translatesAutoresizingMaskIntoConstraints="NO" id="UtB-4L-VQ7">
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ok2-FC-nUd">
                                         <rect key="frame" x="0.0" y="0.0" width="288" height="338"/>
-                                    </imageView>
+                                        <subviews>
+                                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="DefaultImage" translatesAutoresizingMaskIntoConstraints="NO" id="UtB-4L-VQ7">
+                                                <rect key="frame" x="0.0" y="0.0" width="288" height="338"/>
+                                            </imageView>
+                                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="sCu-cb-4ef">
+                                                <rect key="frame" x="134" y="159" width="20" height="20"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            </activityIndicatorView>
+                                        </subviews>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <constraints>
+                                            <constraint firstItem="UtB-4L-VQ7" firstAttribute="leading" secondItem="ok2-FC-nUd" secondAttribute="leading" id="33Z-r6-EGn"/>
+                                            <constraint firstAttribute="bottom" secondItem="UtB-4L-VQ7" secondAttribute="bottom" id="DfN-Pg-jrT"/>
+                                            <constraint firstAttribute="trailing" secondItem="UtB-4L-VQ7" secondAttribute="trailing" id="KC4-pn-BXq"/>
+                                            <constraint firstItem="UtB-4L-VQ7" firstAttribute="top" secondItem="ok2-FC-nUd" secondAttribute="top" id="hX6-ez-Afh"/>
+                                        </constraints>
+                                    </view>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="LjZ-Wx-umQ">
                                         <rect key="frame" x="0.0" y="346" width="288" height="72"/>
                                         <subviews>
@@ -118,6 +134,11 @@
                                         <nil key="highlightedColor"/>
                                     </label>
                                 </subviews>
+                                <constraints>
+                                    <constraint firstItem="ok2-FC-nUd" firstAttribute="top" secondItem="bzq-M6-AWg" secondAttribute="top" id="Prj-tj-hTJ"/>
+                                    <constraint firstItem="ok2-FC-nUd" firstAttribute="leading" secondItem="bzq-M6-AWg" secondAttribute="leading" id="YqT-g4-qz0"/>
+                                    <constraint firstAttribute="trailing" secondItem="ok2-FC-nUd" secondAttribute="trailing" id="o31-nR-Q4w"/>
+                                </constraints>
                             </stackView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -130,6 +151,7 @@
                     </view>
                     <navigationItem key="navigationItem" title="Flick Finder" id="Zw2-5f-C49"/>
                     <connections>
+                        <outlet property="activityIndicator" destination="sCu-cb-4ef" id="Tq9-sd-06P"/>
                         <outlet property="flickImageView" destination="UtB-4L-VQ7" id="daX-vk-fA7"/>
                         <outlet property="flickTitleLabel" destination="oc5-WR-VT6" id="Jq3-Pv-rIp"/>
                         <outlet property="geoSearchButton" destination="dBG-8x-3iJ" id="3fu-dX-MNz"/>
