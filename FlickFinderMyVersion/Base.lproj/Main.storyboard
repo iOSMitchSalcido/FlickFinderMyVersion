@@ -28,11 +28,7 @@
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ok2-FC-nUd">
                                         <rect key="frame" x="0.0" y="0.0" width="288" height="338"/>
                                         <subviews>
-                                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="DefaultImage" translatesAutoresizingMaskIntoConstraints="NO" id="UtB-4L-VQ7">
-                                                <rect key="frame" x="0.0" y="0.0" width="288" height="338"/>
-                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                            </imageView>
-                                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0eK-s7-ZOi">
+                                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleAspectFit" translatesAutoresizingMaskIntoConstraints="NO" id="0eK-s7-ZOi">
                                                 <rect key="frame" x="0.0" y="0.0" width="288" height="338"/>
                                             </scrollView>
                                             <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="sCu-cb-4ef">
@@ -156,7 +152,7 @@
                     <navigationItem key="navigationItem" title="Flick Finder" id="Zw2-5f-C49"/>
                     <connections>
                         <outlet property="activityIndicator" destination="sCu-cb-4ef" id="Tq9-sd-06P"/>
-                        <outlet property="flickImageView" destination="UtB-4L-VQ7" id="daX-vk-fA7"/>
+                        <outlet property="flickScrollView" destination="0eK-s7-ZOi" id="yRw-jT-W8E"/>
                         <outlet property="flickTitleLabel" destination="oc5-WR-VT6" id="Jq3-Pv-rIp"/>
                         <outlet property="geoSearchButton" destination="dBG-8x-3iJ" id="3fu-dX-MNz"/>
                         <outlet property="latitudeTextField" destination="4Eo-Vg-vWy" id="ka1-rD-9K6"/>
@@ -251,7 +247,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="DefaultImage" width="288" height="288"/>
         <image name="Locations32pt" width="32" height="32"/>
         <image name="search32pt" width="32" height="32"/>
     </resources>

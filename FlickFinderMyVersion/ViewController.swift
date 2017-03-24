@@ -12,7 +12,6 @@ class ViewController: UIViewController {
 
     @IBOutlet weak var appTitleLabel: UILabel!
     @IBOutlet weak var flickTitleLabel: UILabel!
-    @IBOutlet weak var flickImageView: UIImageView!
     @IBOutlet weak var phraseTextField: UITextField!
     @IBOutlet weak var longitudeTextField: UITextField!
     @IBOutlet weak var latitudeTextField: UITextField!
@@ -20,12 +19,22 @@ class ViewController: UIViewController {
     @IBOutlet weak var locationsButton: UIButton!
     @IBOutlet weak var geoSearchButton: UIButton!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
+    @IBOutlet weak var flickScrollView: UIScrollView!
+    
+    var defaultImageView: UIImageView!
     
     let api = FlickrAPI()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+        
+
+        let view = UIView(frame: flickScrollView.bounds)
+        defaultImageView = UIImageView(frame: flickScrollView.bounds)
+        defaultImageView.contentMode = .scaleToFill
+        defaultImageView.image = UIImage(named: "DefaultImage")
+        view.addSubview(defaultImageView)
+        flickScrollView.addSubview(view)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -49,7 +58,6 @@ class ViewController: UIViewController {
             
             activityIndicator.isHidden = false
             activityIndicator.startAnimating()
-            flickImageView.alpha = 0.5
             
             api.searchForFlick(phrase: phraseTextField.text!, bbox: nil) {
                 (error, images) in
@@ -87,12 +95,11 @@ class ViewController: UIViewController {
                 else {
                     
                     let dict = images?.last
-                    for (key, value) in  dict! {
+                    for (key, _) in  dict! {
                         
                         //dispatch
                         DispatchQueue.main.async {
                             self.flickTitleLabel.text = key
-                            self.flickImageView.image = value
                         }
                     }
                 }
@@ -102,7 +109,6 @@ class ViewController: UIViewController {
                     self.enableUIState(true)
                     self.activityIndicator.stopAnimating()
                     self.activityIndicator.isHidden = true
-                    self.flickImageView.alpha = 1.0
                 }
             }
         }
