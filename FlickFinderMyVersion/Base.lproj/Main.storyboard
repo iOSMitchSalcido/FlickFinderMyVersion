@@ -28,9 +28,13 @@
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ok2-FC-nUd">
                                         <rect key="frame" x="0.0" y="0.0" width="288" height="338"/>
                                         <subviews>
-                                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="DefaultImage" translatesAutoresizingMaskIntoConstraints="NO" id="UtB-4L-VQ7">
+                                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="DefaultImage" translatesAutoresizingMaskIntoConstraints="NO" id="UtB-4L-VQ7">
                                                 <rect key="frame" x="0.0" y="0.0" width="288" height="338"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             </imageView>
+                                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0eK-s7-ZOi">
+                                                <rect key="frame" x="0.0" y="0.0" width="288" height="338"/>
+                                            </scrollView>
                                             <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="sCu-cb-4ef">
                                                 <rect key="frame" x="134" y="159" width="20" height="20"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -38,10 +42,10 @@
                                         </subviews>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <constraints>
-                                            <constraint firstItem="UtB-4L-VQ7" firstAttribute="leading" secondItem="ok2-FC-nUd" secondAttribute="leading" id="33Z-r6-EGn"/>
-                                            <constraint firstAttribute="bottom" secondItem="UtB-4L-VQ7" secondAttribute="bottom" id="DfN-Pg-jrT"/>
-                                            <constraint firstAttribute="trailing" secondItem="UtB-4L-VQ7" secondAttribute="trailing" id="KC4-pn-BXq"/>
-                                            <constraint firstItem="UtB-4L-VQ7" firstAttribute="top" secondItem="ok2-FC-nUd" secondAttribute="top" id="hX6-ez-Afh"/>
+                                            <constraint firstItem="0eK-s7-ZOi" firstAttribute="top" secondItem="ok2-FC-nUd" secondAttribute="top" id="2vB-PH-Trk"/>
+                                            <constraint firstAttribute="bottom" secondItem="0eK-s7-ZOi" secondAttribute="bottom" id="3VX-w4-yCb"/>
+                                            <constraint firstItem="0eK-s7-ZOi" firstAttribute="leading" secondItem="ok2-FC-nUd" secondAttribute="leading" id="cyO-in-uDo"/>
+                                            <constraint firstAttribute="trailing" secondItem="0eK-s7-ZOi" secondAttribute="trailing" id="dL9-RG-43V"/>
                                         </constraints>
                                     </view>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="LjZ-Wx-umQ">
