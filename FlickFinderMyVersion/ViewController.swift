@@ -10,7 +10,7 @@ import UIKit
 
 class ViewController: UIViewController {
 
-    @IBOutlet weak var appTitleLabel: UILabel!
+    //@IBOutlet weak var appTitleLabel: UILabel!
     @IBOutlet weak var flickTitleLabel: UILabel!
     @IBOutlet weak var phraseTextField: UITextField!
     @IBOutlet weak var longitudeTextField: UITextField!
@@ -18,23 +18,58 @@ class ViewController: UIViewController {
     @IBOutlet weak var phraseSearchButton: UIButton!
     @IBOutlet weak var locationsButton: UIButton!
     @IBOutlet weak var geoSearchButton: UIButton!
-    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
-    @IBOutlet weak var flickScrollView: UIScrollView!
+    @IBOutlet weak var backgroundView: UIView!
     
+    var imageViewArray = [UIImageView]()
+    var flickScrollView: UIScrollView!
+    var activityIndicator: UIActivityIndicatorView!
+
     var defaultImageView: UIImageView!
     
     let api = FlickrAPI()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        print("viewDid")
 
-        let view = UIView(frame: flickScrollView.bounds)
-        defaultImageView = UIImageView(frame: flickScrollView.bounds)
-        defaultImageView.contentMode = .scaleToFill
-        defaultImageView.image = UIImage(named: "DefaultImage")
-        view.addSubview(defaultImageView)
-        flickScrollView.addSubview(view)
+        flickScrollView = UIScrollView(frame: backgroundView.bounds)
+        backgroundView.addSubview(flickScrollView)
+
+        activityIndicator = UIActivityIndicatorView()
+        activityIndicator.frame.size = CGSize(width: 20, height: 20)
+        //backgroundView.addSubview(activityIndicator)
+
+        let iv = UIImageView(frame: flickScrollView.bounds)
+        iv.image = UIImage(named: "DefaultImage")
+        iv.contentMode = .scaleAspectFit
+        imageViewArray.append(iv)
+        flickScrollView.addSubview(iv)
+        
+        let iv2 = UIImageView(frame: flickScrollView.bounds)
+        iv2.image = UIImage(named: "DefaultImage")
+        iv2.contentMode = .scaleAspectFit
+        imageViewArray.append(iv2)
+        flickScrollView.addSubview(iv2)
+    }
+    
+    override func viewWillLayoutSubviews() {
+        print("willLayout...")
+        
+        flickScrollView.frame = backgroundView.bounds
+        print("bgv bounds: \(backgroundView.bounds)")
+        print("sv bounds: \(flickScrollView.bounds)")
+        print("sv bounds: \(flickScrollView.frame)")
+        var frame = flickScrollView.bounds
+        frame.origin = CGPoint(x: 0, y: 0)
+        var size = CGSize(width: 0, height: frame.size.height)
+        for imageView in imageViewArray {
+            imageView.frame = frame
+            print("IV Frame: \(frame)")
+            frame.origin.x += frame.size.width
+            size.width += frame.size.width
+        }
+        
+        flickScrollView.contentSize = size
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -56,6 +91,7 @@ class ViewController: UIViewController {
             
             enableUIState(false)
             
+            flickScrollView.alpha = 0.5
             activityIndicator.isHidden = false
             activityIndicator.startAnimating()
             
@@ -107,6 +143,7 @@ class ViewController: UIViewController {
                 //dispatch
                 DispatchQueue.main.async {
                     self.enableUIState(true)
+                    self.flickScrollView.alpha = 1.0
                     self.activityIndicator.stopAnimating()
                     self.activityIndicator.isHidden = true
                 }
