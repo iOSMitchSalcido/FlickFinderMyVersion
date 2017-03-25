@@ -91,98 +91,92 @@ class ViewController: UIViewController {
          Invoke a Flickr image search by phrase, using text in textField
          */
         
-        // text for valid text
-        if !(phraseTextField.text?.isEmpty)! {
+        // set enabled state of UI, buttons, etc
+        enableUIState(false)
+        
+        // dim sc, show activityView animated
+        flickScrollView.alpha = 0.5
+        activityIndicator.isHidden = false
+        activityIndicator.startAnimating()
+        
+        // api call
+        api.searchForFlick(phrase: searchPhase(), bbox: nil) {
+            (error, images) in
             
-            // good text... begin search
+            // completion
             
-            // set enabled state of UI, buttons, etc
-            enableUIState(false)
-            
-            // dim sc, show activityView animated
-            flickScrollView.alpha = 0.5
-            activityIndicator.isHidden = false
-            activityIndicator.startAnimating()
-            
-            // api call
-            api.searchForFlick(phrase: phraseTextField.text!, bbox: nil) {
-                (error, images) in
+            if let error = error {
                 
-                // completion
+                /*
+                 Error occurred.
+                 Use error info to create an alert to present to user
+                 */
                 
-                if let error = error {
-                    
-                    /*
-                     Error occurred.
-                     Use error info to create an alert to present to user
-                    */
-                    
-                    // default title, message
-                    var alertTitle = "Unknown error"
-                    var alertMessage = ""
-                    switch error {
-                    case .searchItems(let value):
-                        alertTitle = "Search Items Error"
-                        alertMessage = value
-                        break
-                    case .dataTask(let value):
-                        alertTitle = "Network error"
-                        alertMessage = value
-                        break
-                    }
-                    
-                    // create alert, action
-                    let alert = UIAlertController(title: alertTitle,
-                                                  message: alertMessage,
-                                                  preferredStyle: .alert)
-                    let action = UIAlertAction(title: "OK",
-                                               style: .cancel,
-                                               handler: nil)
-                    
-                    alert.addAction(action)
-                    
-                    // present alert
-                    DispatchQueue.main.async {
-                        self.present(alert,
-                                     animated: true,
-                                     completion: nil)
-                    }
-                }
-                else {
-                    
-                    // no error..continue
-                    
-                    // get dictionary from images dictionary
-                    let dict = images?.last
-                    for (key, value) in  dict! {
-                        
-                        // create imageView to place new image in
-                        let imageView = UIImageView()
-                        imageView.contentMode = .scaleAspectFit
-                        imageView.image = value
-                        
-                        // append new imageView to array
-                        self.imageViewArray.append(imageView)
-                        
-                        //dispatch
-                        DispatchQueue.main.async {
-                            
-                            // update titleLabel, imageViews in sv
-                            self.flickTitleLabel.text = key
-                            self.updateScrollView()
-                        }
-                    }
+                // default title, message
+                var alertTitle = "Unknown error"
+                var alertMessage = ""
+                switch error {
+                case .searchItems(let value):
+                    alertTitle = "Search Items Error"
+                    alertMessage = value
+                    break
+                case .dataTask(let value):
+                    alertTitle = "Network error"
+                    alertMessage = value
+                    break
                 }
                 
-                //dispatch
+                // create alert, action
+                let alert = UIAlertController(title: alertTitle,
+                                              message: alertMessage,
+                                              preferredStyle: .alert)
+                let action = UIAlertAction(title: "OK",
+                                           style: .cancel,
+                                           handler: nil)
+                
+                alert.addAction(action)
+                
+                // present alert
                 DispatchQueue.main.async {
-                    
-                    // return UI to ready state
-                    self.enableUIState(true)
-                    self.flickScrollView.alpha = 1.0
-                    self.activityIndicator.stopAnimating()
-                    self.activityIndicator.isHidden = true
+                    self.present(alert,
+                                 animated: true,
+                                 completion: nil)
                 }
+            }
+            else {
+                
+                // no error..continue with presenting flickr image
+                
+                // get dictionary from images dictionary
+                let dict = images?.last
+                for (key, value) in  dict! {
+                    
+                    // create imageView to place new image in
+                    let imageView = UIImageView()
+                    imageView.contentMode = .scaleAspectFit
+                    imageView.image = value
+                    
+                    // append new imageView to array
+                    self.imageViewArray.append(imageView)
+                    
+                    //dispatch
+                    DispatchQueue.main.async {
+                        
+                        // update titleLabel, imageViews in sv
+                        self.flickTitleLabel.text = key
+                        self.updateScrollView()
+                    }
+                }
+            }
+            
+            //dispatch
+            DispatchQueue.main.async {
+                
+                // return UI to ready state
+                self.enableUIState(true)
+                self.flickScrollView.alpha = 1.0
+                self.activityIndicator.stopAnimating()
+                self.activityIndicator.isHidden = true
             }
         }
     }
@@ -305,5 +299,29 @@ extension ViewController {
         // scroll to last added imageView
         frame.origin.x -= frame.size.width
         flickScrollView.scrollRectToVisible(frame, animated: true)
+    }
+    
+    // helper function, return search text from phrase text field
+    func searchPhase() -> String? {
+        
+        // verify not empty text
+        if !(phraseTextField.text?.isEmpty)! {
+            
+            // verify characters other than " "
+            let characters = phraseTextField.text?.characters
+            for character in characters! {
+                if character != " " {
+                    return phraseTextField.text
+                }
+            }
+        }
+        
+        return nil
+    }
+    
+    // helper function, return bbox in string from lon/lat textFields
+    func searchGeo() -> String? {
+        
+        return nil
     }
 }
