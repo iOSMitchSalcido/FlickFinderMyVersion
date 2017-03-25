@@ -5,6 +5,11 @@
 //  Created by Online Training on 3/20/17.
 //  Copyright © 2017 Mitch Salcido. All rights reserved.
 //
+/*
+About ViewController.swift:
+ Presents a scrollView for showing found flicks, phrase search textField, and geo search textFields.
+ Handles creating Flickr searches using either a phrase or a geo search.
+ */
 
 import UIKit
 
@@ -12,20 +17,27 @@ class ViewController: UIViewController {
 
     //@IBOutlet weak var appTitleLabel: UILabel!
     @IBOutlet weak var flickTitleLabel: UILabel!
-    @IBOutlet weak var phraseTextField: UITextField!
-    @IBOutlet weak var longitudeTextField: UITextField!
-    @IBOutlet weak var latitudeTextField: UITextField!
-    @IBOutlet weak var phraseSearchButton: UIButton!
-    @IBOutlet weak var locationsButton: UIButton!
-    @IBOutlet weak var geoSearchButton: UIButton!
-    @IBOutlet weak var backgroundView: UIView!
+    @IBOutlet weak var phraseTextField: UITextField!        // search for Flick by phrase
+    @IBOutlet weak var longitudeTextField: UITextField!     // lon: Geo flick search text
+    @IBOutlet weak var latitudeTextField: UITextField!      // lat: Geo flick search text
+    @IBOutlet weak var phraseSearchButton: UIButton!        // search by text phrase
+    @IBOutlet weak var locationsButton: UIButton!           //TODO: !! WORK IN PROGRESS !!
+    @IBOutlet weak var geoSearchButton: UIButton!           // search by geo
+    @IBOutlet weak var backgroundView: UIView!              // Container for scrollView and activityView
     
-    var imageViewArray = [UIImageView]()
+    // viewer for flicks in scrolling format
     var flickScrollView: UIScrollView!
+
+    // hold imageView's that are in flickScrollView
+    var imageViewArray = [UIImageView]()
+    
+    // animate when searching....
     var activityIndicator: UIActivityIndicatorView!
 
+    // when no images are available
     var defaultImageView: UIImageView!
     
+    // ref to API
     let api = FlickrAPI()
     
     override func viewDidLoad() {
