@@ -30,53 +30,59 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        print("viewDid")
         
         flickScrollView = UIScrollView(frame: backgroundView.bounds)
+        flickScrollView.isPagingEnabled = true
         backgroundView.addSubview(flickScrollView)
-
-        //activityIndicator = UIActivityIndicatorView()
-        //activityIndicator.frame.size = CGSize(width: 20, height: 20)
-        //backgroundView.addSubview(activityIndicator)
-
-        let iv = UIImageView(frame: flickScrollView.bounds)
-        iv.image = UIImage(named: "DefaultImage")
-        iv.contentMode = .scaleAspectFit
-        imageViewArray.append(iv)
-        flickScrollView.addSubview(iv)
-        
-        let iv2 = UIImageView(frame: flickScrollView.bounds)
-        iv2.image = UIImage(named: "DefaultImage")
-        iv2.contentMode = .scaleAspectFit
-        imageViewArray.append(iv2)
-        flickScrollView.addSubview(iv2)
-        
-        let iv3 = UIImageView(frame: flickScrollView.bounds)
-        iv3.image = UIImage(named: "DefaultImage")
-        iv3.contentMode = .scaleAspectFit
-        imageViewArray.append(iv3)
-        flickScrollView.addSubview(iv3)
-        
         activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
         backgroundView.addSubview(activityIndicator)
+
+        defaultImageView = UIImageView()
+        defaultImageView.image = UIImage(named: "DefaultImage")
+        imageViewArray.append(defaultImageView)
+        flickScrollView.addSubview(defaultImageView)
+        print("scrollView: \(flickScrollView.subviews.count)")
+
+        updateScrollView()
     }
     
     override func viewWillLayoutSubviews() {
-        print("willLayout...")
+    
+    }
+    
+    func updateScrollView() {
+        
+        for imageView in imageViewArray {
+            if imageView.superview == nil {
+                flickScrollView.addSubview(imageView)
+            }
+        }
+        
+        if imageViewArray.count == 2 && imageViewArray.first == defaultImageView {
+            let iv = imageViewArray.removeFirst()
+            iv.removeFromSuperview()
+        }
         
         flickScrollView.frame = backgroundView.bounds
         var frame = flickScrollView.bounds
+        frame.origin = CGPoint(x: 0, y: 0)
         var size = CGSize(width: 0, height: frame.size.height)
         for imageView in imageViewArray {
             imageView.frame = frame
             frame.origin.x += frame.size.width
             size.width += frame.size.width
         }
-        
         flickScrollView.contentSize = size
         
+        frame.origin.x -= frame.size.width
+        flickScrollView.scrollRectToVisible(frame, animated: true)
+        //flickScrollView
         activityIndicator.frame.origin.x = backgroundView.bounds.size.width / 2.0 - activityIndicator.frame.width / 2.0
         activityIndicator.frame.origin.y = backgroundView.bounds.size.height / 2.0 - activityIndicator.frame.height / 2.0
+    }
+    
+    func upSwipeGrDetected(_ gr: UISwipeGestureRecognizer) {
+        print("upSwipe")
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -138,11 +144,18 @@ class ViewController: UIViewController {
                 else {
                     
                     let dict = images?.last
-                    for (key, _) in  dict! {
+                    for (key, value) in  dict! {
+                        
+                        let imageView = UIImageView()
+                        imageView.contentMode = .scaleAspectFit
+                        imageView.image = value
+                        self.imageViewArray.append(imageView)
                         
                         //dispatch
                         DispatchQueue.main.async {
                             self.flickTitleLabel.text = key
+                            //self.flickScrollView.addSubview(imageView)
+                            self.updateScrollView()
                         }
                     }
                 }
