@@ -6,7 +6,12 @@
 //  Copyright © 2017 Mitch Salcido. All rights reserved.
 //
 /*
+ About LocationsViewController.swift:
+ !! work in progress !!
+ View with map and tableView showing popular locations. VC will provide functionality to select "popular" location
+ from tv, or drop a pin on the map to select a location...
  */
+
 import UIKit
 import MapKit
 
