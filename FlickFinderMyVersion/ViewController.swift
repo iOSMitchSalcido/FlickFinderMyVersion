@@ -16,19 +16,24 @@ import UIKit
 class ViewController: UIViewController {
 
     //@IBOutlet weak var appTitleLabel: UILabel!
-    @IBOutlet weak var flickTitleLabel: UILabel!
-    @IBOutlet weak var phraseTextField: UITextField!        // search for Flick by phrase
+    @IBOutlet weak var flickTitleLabel: UILabel!            // show flick title
+    @IBOutlet weak var phraseTextField: UITextField!        // search for Flick by text phrase
     @IBOutlet weak var longitudeTextField: UITextField!     // lon: Geo flick search text
     @IBOutlet weak var latitudeTextField: UITextField!      // lat: Geo flick search text
-    @IBOutlet weak var phraseSearchButton: UIButton!        // search by text phrase
+    @IBOutlet weak var phraseSearchButton: UIButton!        // invoke search by text phrase
     @IBOutlet weak var locationsButton: UIButton!           //TODO: !! WORK IN PROGRESS !!
-    @IBOutlet weak var geoSearchButton: UIButton!           // search by geo
-    @IBOutlet weak var backgroundView: UIView!              // Container for scrollView and activityView
+    @IBOutlet weak var geoSearchButton: UIButton!           // invoke search by geo
+    
+    // container for flickScrollView and activityView
+    @IBOutlet weak var backgroundView: UIView!
     
     // viewer for flicks in scrolling format
+    // adding programmatically..need to review autoLayout
+    // ...don't like doing this way. When I add sv in storyBoard, views in sc seem
+    // to be shifted down by ~navBar and statusbar heights...
     var flickScrollView: UIScrollView!
 
-    // hold imageView's that are in flickScrollView
+    // store imageView's that are in flickScrollView
     var imageViewArray = [UIImageView]()
     
     // animate when searching....
@@ -43,63 +48,31 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // create/config flickScrollView.. add to backgroundView
         flickScrollView = UIScrollView(frame: backgroundView.bounds)
         flickScrollView.isPagingEnabled = true
         backgroundView.addSubview(flickScrollView)
+        
+        // create activityView..add to backgroundView
         activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
+        activityIndicator.frame.origin.x = backgroundView.bounds.size.width / 2.0 - activityIndicator.frame.width / 2.0
+        activityIndicator.frame.origin.y = backgroundView.bounds.size.height / 2.0 - activityIndicator.frame.height / 2.0
         backgroundView.addSubview(activityIndicator)
 
+        // default image.. shown when no Flicks
         defaultImageView = UIImageView()
         defaultImageView.image = UIImage(named: "DefaultImage")
         imageViewArray.append(defaultImageView)
         flickScrollView.addSubview(defaultImageView)
-        print("scrollView: \(flickScrollView.subviews.count)")
-
+        
+        // layout flickScrollView
         updateScrollView()
-    }
-    
-    override func viewWillLayoutSubviews() {
-    
-    }
-    
-    func updateScrollView() {
-        
-        for imageView in imageViewArray {
-            if imageView.superview == nil {
-                flickScrollView.addSubview(imageView)
-            }
-        }
-        
-        if imageViewArray.count == 2 && imageViewArray.first == defaultImageView {
-            let iv = imageViewArray.removeFirst()
-            iv.removeFromSuperview()
-        }
-        
-        flickScrollView.frame = backgroundView.bounds
-        var frame = flickScrollView.bounds
-        frame.origin = CGPoint(x: 0, y: 0)
-        var size = CGSize(width: 0, height: frame.size.height)
-        for imageView in imageViewArray {
-            imageView.frame = frame
-            frame.origin.x += frame.size.width
-            size.width += frame.size.width
-        }
-        flickScrollView.contentSize = size
-        
-        frame.origin.x -= frame.size.width
-        flickScrollView.scrollRectToVisible(frame, animated: true)
-        //flickScrollView
-        activityIndicator.frame.origin.x = backgroundView.bounds.size.width / 2.0 - activityIndicator.frame.width / 2.0
-        activityIndicator.frame.origin.y = backgroundView.bounds.size.height / 2.0 - activityIndicator.frame.height / 2.0
-    }
-    
-    func upSwipeGrDetected(_ gr: UISwipeGestureRecognizer) {
-        print("upSwipe")
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
+        // begin notifications...hide activityIndicator
         beginKeyboardNotifications()
         activityIndicator.isHidden = true
     }
@@ -107,24 +80,44 @@ class ViewController: UIViewController {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
+        // end notifications
         terminateKeyboardNotifications()
     }
     
+    // phrase search
     @IBAction func phraseSearchButtonPressed(_ sender: UIButton) {
         
+        /*
+         Invoke a Flickr image search by phrase, using text in textField
+         */
+        
+        // text for valid text
         if !(phraseTextField.text?.isEmpty)! {
             
+            // good text... begin search
+            
+            // set enabled state of UI, buttons, etc
             enableUIState(false)
             
+            // dim sc, show activityView animated
             flickScrollView.alpha = 0.5
             activityIndicator.isHidden = false
             activityIndicator.startAnimating()
             
+            // api call
             api.searchForFlick(phrase: phraseTextField.text!, bbox: nil) {
                 (error, images) in
                 
+                // completion
+                
                 if let error = error {
                     
+                    /*
+                     Error occurred.
+                     Use error info to create an alert to present to user
+                    */
+                    
+                    // default title, message
                     var alertTitle = "Unknown error"
                     var alertMessage = ""
                     switch error {
@@ -138,6 +131,7 @@ class ViewController: UIViewController {
                         break
                     }
                     
+                    // create alert, action
                     let alert = UIAlertController(title: alertTitle,
                                                   message: alertMessage,
                                                   preferredStyle: .alert)
@@ -147,6 +141,7 @@ class ViewController: UIViewController {
                     
                     alert.addAction(action)
                     
+                    // present alert
                     DispatchQueue.main.async {
                         self.present(alert,
                                      animated: true,
@@ -155,18 +150,25 @@ class ViewController: UIViewController {
                 }
                 else {
                     
+                    // no error..continue
+                    
+                    // get dictionary from images dictionary
                     let dict = images?.last
                     for (key, value) in  dict! {
                         
+                        // create imageView to place new image in
                         let imageView = UIImageView()
                         imageView.contentMode = .scaleAspectFit
                         imageView.image = value
+                        
+                        // append new imageView to array
                         self.imageViewArray.append(imageView)
                         
                         //dispatch
                         DispatchQueue.main.async {
+                            
+                            // update titleLabel, imageViews in sv
                             self.flickTitleLabel.text = key
-                            //self.flickScrollView.addSubview(imageView)
                             self.updateScrollView()
                         }
                     }
@@ -174,6 +176,8 @@ class ViewController: UIViewController {
                 
                 //dispatch
                 DispatchQueue.main.async {
+                    
+                    // return UI to ready state
                     self.enableUIState(true)
                     self.flickScrollView.alpha = 1.0
                     self.activityIndicator.stopAnimating()
@@ -186,6 +190,7 @@ class ViewController: UIViewController {
     @IBAction func geoSearchButtonPressed(_ sender: UIButton) {
     }
     
+    // invoke LocationsVC ...work in progress
     @IBAction func locationsButtonPressed(_ sender: UIButton) {
         
         let controller = storyboard?.instantiateViewController(withIdentifier: "LocationsViewController") as! LocationsViewController
@@ -197,6 +202,7 @@ class ViewController: UIViewController {
 // handle keyboard shift and notifications for keyboard
 extension ViewController {
     
+    // begin notifications for keyboard showing/hiding
     func beginKeyboardNotifications() {
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(keyboardWillShow(_:)),
@@ -209,6 +215,7 @@ extension ViewController {
                                                object: nil)
     }
     
+    // end notifications for keyboard showing/hiding
     func terminateKeyboardNotifications() {
         
         NotificationCenter.default.removeObserver(self,
@@ -220,20 +227,25 @@ extension ViewController {
                                                   object: nil)
     }
     
+    // action method for keyboardWillShow notification
     func keyboardWillShow(_ notification: Notification) {
         
+        // shift view to keep textFields visible while editing
         if self.view.superview?.frame.origin.y == 0.0 {
             self.view.superview?.frame.origin.y -= keyboardHeight(notification)
         }
     }
     
+    // action method for keyboardWillHide notification
     func keyboardWillHide(_ notification: Notification) {
         
+        // return view to normal y origin
         if (self.view.superview?.frame.origin.y)! < 0.0 {
             self.view.superview?.frame.origin.y -= (self.view.superview?.frame.origin.y)!
         }
     }
     
+    // return keyboard height..less some aesthetic scaling...
     func keyboardHeight(_ notification: Notification) -> CGFloat {
         
         let userInfo = notification.userInfo
@@ -251,11 +263,47 @@ extension ViewController: UITextFieldDelegate {
     }
 }
 
+// misc helper functions
 extension ViewController {
     
+    // set enable state of UI
     func enableUIState(_ enable: Bool) {
         self.phraseSearchButton.isEnabled = enable
         self.geoSearchButton.isEnabled = enable
         self.locationsButton.isEnabled = enable
+    }
+    
+    // helper method to layout views in flickScrollView
+    func updateScrollView() {
+        
+        // test imageViews in array... Add to flickScrollView if not currently in it's superView
+        // ...imageView is added to array in closure for flick search..see function below
+        for imageView in imageViewArray {
+            if imageView.superview == nil {
+                flickScrollView.addSubview(imageView)
+            }
+        }
+        
+        // test if a flick is present...remove defaultImage
+        if imageViewArray.count == 2 && imageViewArray.first == defaultImageView {
+            let iv = imageViewArray.removeFirst()
+            iv.removeFromSuperview()
+        }
+        
+        // layout frames in flickScrollView
+        flickScrollView.frame = backgroundView.bounds
+        var frame = flickScrollView.bounds
+        frame.origin = CGPoint(x: 0, y: 0)
+        var size = CGSize(width: 0, height: frame.size.height)
+        for imageView in imageViewArray {
+            imageView.frame = frame
+            frame.origin.x += frame.size.width
+            size.width += frame.size.width
+        }
+        flickScrollView.contentSize = size
+        
+        // scroll to last added imageView
+        frame.origin.x -= frame.size.width
+        flickScrollView.scrollRectToVisible(frame, animated: true)
     }
 }
