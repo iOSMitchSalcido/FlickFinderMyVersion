@@ -31,12 +31,12 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         print("viewDid")
-
+        
         flickScrollView = UIScrollView(frame: backgroundView.bounds)
         backgroundView.addSubview(flickScrollView)
 
-        activityIndicator = UIActivityIndicatorView()
-        activityIndicator.frame.size = CGSize(width: 20, height: 20)
+        //activityIndicator = UIActivityIndicatorView()
+        //activityIndicator.frame.size = CGSize(width: 20, height: 20)
         //backgroundView.addSubview(activityIndicator)
 
         let iv = UIImageView(frame: flickScrollView.bounds)
@@ -50,26 +50,33 @@ class ViewController: UIViewController {
         iv2.contentMode = .scaleAspectFit
         imageViewArray.append(iv2)
         flickScrollView.addSubview(iv2)
+        
+        let iv3 = UIImageView(frame: flickScrollView.bounds)
+        iv3.image = UIImage(named: "DefaultImage")
+        iv3.contentMode = .scaleAspectFit
+        imageViewArray.append(iv3)
+        flickScrollView.addSubview(iv3)
+        
+        activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
+        backgroundView.addSubview(activityIndicator)
     }
     
     override func viewWillLayoutSubviews() {
         print("willLayout...")
         
         flickScrollView.frame = backgroundView.bounds
-        print("bgv bounds: \(backgroundView.bounds)")
-        print("sv bounds: \(flickScrollView.bounds)")
-        print("sv bounds: \(flickScrollView.frame)")
         var frame = flickScrollView.bounds
-        frame.origin = CGPoint(x: 0, y: 0)
         var size = CGSize(width: 0, height: frame.size.height)
         for imageView in imageViewArray {
             imageView.frame = frame
-            print("IV Frame: \(frame)")
             frame.origin.x += frame.size.width
             size.width += frame.size.width
         }
         
         flickScrollView.contentSize = size
+        
+        activityIndicator.frame.origin.x = backgroundView.bounds.size.width / 2.0 - activityIndicator.frame.width / 2.0
+        activityIndicator.frame.origin.y = backgroundView.bounds.size.height / 2.0 - activityIndicator.frame.height / 2.0
     }
     
     override func viewWillAppear(_ animated: Bool) {
