@@ -27,6 +27,9 @@ class ViewController: UIViewController {
     @IBOutlet weak var locationsButton: UIButton!           //TODO: !! WORK IN PROGRESS !!
     @IBOutlet weak var geoSearchButton: UIButton!           // invoke search by geo
     
+    // trash to delete flick
+    var trashBbi: UIBarButtonItem!
+    
     // container for flickScrollView and activityView
     @IBOutlet weak var backgroundView: UIView!
     
@@ -50,6 +53,13 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        // trashBbi on left navbar
+        trashBbi = UIBarButtonItem(barButtonSystemItem: .trash,
+                                   target: self,
+                                   action: #selector(trashBbiPressed(_:)))
+        trashBbi.isEnabled = false
+        navigationItem.leftBarButtonItem = trashBbi
         
         // create/config flickScrollView.. add to backgroundView
         flickScrollView = UIScrollView(frame: backgroundView.bounds)
@@ -200,6 +210,34 @@ class ViewController: UIViewController {
         let nc = UINavigationController(rootViewController: controller)
         present(nc, animated: true, completion: nil)
     }
+    
+    func trashBbiPressed(_ sender: UIBarButtonItem) {
+        
+        // determine index of visible imageView in sv
+        let xOffset = flickScrollView.contentOffset.x
+        let width = flickScrollView.frame.size.width
+        let index = Int(xOffset / width)
+        
+        // remove imageView from array, superView
+        let iv = imageViewArray.remove(at: index)
+        iv.removeFromSuperview()
+        
+        // test for no imageViews...insert default imageView
+        if imageViewArray.count == 0 {
+            imageViewArray.append(defaultImageView)
+            flickScrollView.addSubview(defaultImageView)
+            trashBbi.isEnabled = false
+        }
+        
+        // animate in alpha of sv...aesthetics
+        self.flickScrollView.alpha = 0.0
+        UIView.animate(withDuration: 0.8) {
+            self.flickScrollView.alpha = 1.0
+        }
+        
+        // update frames
+        updateScrollView()
+    }
 }
 
 // handle keyboard shift and notifications for keyboard
@@ -283,6 +321,7 @@ extension ViewController {
         // ...imageView is added to array in closure for flick search..see function below
         for imageView in imageViewArray {
             if imageView.superview == nil {
+                trashBbi.isEnabled = true
                 flickScrollView.addSubview(imageView)
             }
         }
