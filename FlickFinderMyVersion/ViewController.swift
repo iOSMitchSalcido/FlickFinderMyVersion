@@ -15,6 +15,9 @@ import UIKit
 
 class ViewController: UIViewController {
 
+    // +/- resolution in degrees of geo search..used to create bbox
+    let GEO_RESOLUTION: Float = 0.5
+    
     //@IBOutlet weak var appTitleLabel: UILabel!
     @IBOutlet weak var flickTitleLabel: UILabel!            // show flick title
     @IBOutlet weak var phraseTextField: UITextField!        // search for Flick by text phrase
@@ -85,7 +88,7 @@ class ViewController: UIViewController {
     }
     
     // phrase search
-    @IBAction func phraseSearchButtonPressed(_ sender: UIButton) {
+    @IBAction func searchButtonPressed(_ sender: UIButton) {
         
         /*
          Invoke a Flickr image search by phrase, using text in textField
@@ -94,13 +97,22 @@ class ViewController: UIViewController {
         // set enabled state of UI, buttons, etc
         enableUIState(false)
         
-        // dim sc, show activityView animated
+        // dim sv, show activityView animated
         flickScrollView.alpha = 0.5
         activityIndicator.isHidden = false
         activityIndicator.startAnimating()
         
+        var phrase: String? = nil
+        var bbox: String? = nil
+        if sender == phraseSearchButton {
+            phrase = searchPhase()
+        }
+        else if sender == geoSearchButton {
+            bbox = searchGeo()
+        }
+        
         // api call
-        api.searchForFlick(phrase: searchPhase(), bbox: nil) {
+        api.searchForFlick(phrase: phrase, bbox: bbox) {
             (error, images) in
             
             // completion
@@ -179,9 +191,6 @@ class ViewController: UIViewController {
                 self.activityIndicator.isHidden = true
             }
         }
-    }
-    
-    @IBAction func geoSearchButtonPressed(_ sender: UIButton) {
     }
     
     // invoke LocationsVC ...work in progress
@@ -322,6 +331,44 @@ extension ViewController {
     // helper function, return bbox in string from lon/lat textFields
     func searchGeo() -> String? {
         
-        return nil
+        // function to test is a float falls on/between min/max
+        func withinRange(_ value: Float, min: Float, max: Float) -> Bool {
+            if value >= min && value <= max {
+                return true
+            }
+            return false
+        }
+        
+        // verify valid floats in textFields
+        guard let lat = Float(latitudeTextField.text!),
+        let lon = Float(longitudeTextField.text!) else {
+            return nil
+        }
+    
+        // create min/max geo values
+        let lonMin = lon - GEO_RESOLUTION / 2.0
+        let lonMax = lonMin + GEO_RESOLUTION
+        let latMin = lat - GEO_RESOLUTION / 2.0
+        let latMax = latMin + GEO_RESOLUTION
+        
+        // verify each within range
+        if !withinRange(lonMin, min: -180.0, max: 180.0) {
+            return nil
+        }
+        
+        if !withinRange(lonMax, min: -180.0, max: 180.0) {
+            return nil
+        }
+        
+        if !withinRange(latMin, min: -90.0, max: 90.0) {
+            return nil
+        }
+        
+        if !withinRange(latMax, min: -90.0, max: 90.0) {
+            return nil
+        }
+        
+        // convert to string, return
+        return "\(lonMin),\(latMin),\(lonMax),\(latMax)"
     }
 }

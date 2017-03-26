@@ -65,7 +65,7 @@
                                                         </constraints>
                                                         <state key="normal" image="search32pt"/>
                                                         <connections>
-                                                            <action selector="phraseSearchButtonPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="DYC-tC-etS"/>
+                                                            <action selector="searchButtonPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="ZJf-m9-PQB"/>
                                                         </connections>
                                                     </button>
                                                 </subviews>
@@ -80,7 +80,7 @@
                                                             <action selector="locationsButtonPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="nRn-0h-tAV"/>
                                                         </connections>
                                                     </button>
-                                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" horizontalHuggingPriority="248" verticalHuggingPriority="251" horizontalCompressionResistancePriority="749" verticalCompressionResistancePriority="751" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Longitude" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="qwD-1V-Wfk">
+                                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" horizontalHuggingPriority="248" verticalHuggingPriority="251" horizontalCompressionResistancePriority="749" verticalCompressionResistancePriority="751" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="-122.43" borderStyle="roundedRect" placeholder="Longitude" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="qwD-1V-Wfk">
                                                         <rect key="frame" x="39" y="0.0" width="101.5" height="32"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="32" id="h6m-9M-FWp"/>
@@ -92,7 +92,7 @@
                                                             <outlet property="delegate" destination="BYZ-38-t0r" id="SH8-TB-4m6"/>
                                                         </connections>
                                                     </textField>
-                                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" horizontalHuggingPriority="249" verticalHuggingPriority="249" horizontalCompressionResistancePriority="749" verticalCompressionResistancePriority="749" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Latitude" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="4Eo-Vg-vWy">
+                                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" horizontalHuggingPriority="249" verticalHuggingPriority="249" horizontalCompressionResistancePriority="749" verticalCompressionResistancePriority="749" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="37.77" borderStyle="roundedRect" placeholder="Latitude" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="4Eo-Vg-vWy">
                                                         <rect key="frame" x="147.5" y="0.0" width="101.5" height="32"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="32" id="LM8-Uu-YBv"/>
@@ -111,7 +111,7 @@
                                                         </constraints>
                                                         <state key="normal" image="search32pt"/>
                                                         <connections>
-                                                            <action selector="geoSearchButtonPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Wci-fv-I5A"/>
+                                                            <action selector="searchButtonPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="eHt-BX-6H5"/>
                                                         </connections>
                                                     </button>
                                                 </subviews>
