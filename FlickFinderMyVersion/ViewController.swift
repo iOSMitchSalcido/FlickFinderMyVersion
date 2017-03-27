@@ -40,7 +40,7 @@ class ViewController: UIViewController {
     var flickScrollView: UIScrollView!
     
     // maintain flicks in flicksScrollView as tuple, title and imageView
-    var flicksArray = [(String, UIImageView)]()
+    var flicksArray = [Flick]()
     
     // animate when searching....
     var activityIndicator: UIActivityIndicatorView!
@@ -74,7 +74,7 @@ class ViewController: UIViewController {
         backgroundView.addSubview(activityIndicator)
 
         // initial load default image
-        addFlick(nil)        
+        addFlick(Flick(title: defaultTitle, image: UIImage(named: "DefaultImage")!))
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -168,10 +168,11 @@ class ViewController: UIViewController {
                 let dict = images?.last
                 for (key, value) in  dict! {
                     
+                    let flick = Flick(title: key, image: value)
                     //dispatch
                     DispatchQueue.main.async {
                         // update flick sv
-                        self.addFlick((key, value))
+                        self.addFlick(flick)
                     }
                 }
             }
@@ -358,38 +359,23 @@ extension ViewController {
     }
     
     // function to add a new flick to scrollView
-    func addFlick(_ flick: (String, UIImage)?) {
+    func addFlick(_ flick: Flick) {
         
-        // Add flick to scrollView. If nil tuple, then insert default flick/title
-        var flickTitle: String!
-        var flickImage: UIImage!
-        if let flick = flick {
-            flickTitle = flick.0
-            flickImage = flick.1
-        }
-        else {
-            flickTitle = defaultTitle
-            flickImage = UIImage(named: "DefaultImage")
-        }
-
-        // append flicksArray, add to flickScrollView
-        let imageView = UIImageView()
-        imageView.contentMode = .scaleAspectFit
-        imageView.image = flickImage
-        flicksArray.append((flickTitle, imageView))
-        flickScrollView.addSubview(imageView)
+        // place flick in array, add to scrollView
+        flicksArray.append(flick)
+        flickScrollView.addSubview(flick.flickImageView)
         
         // flickTitle
-        flickTitleLabel.text = flickTitle
+        flickTitleLabel.text = flick.title
         
-        // trash
+        // trash ok to enable
         trashBbi.isEnabled = flicksArray.count > 1
         
         // layout frames in flickScrollView
         layoutFlickScrollView()
         
         // scroll to last added imageView
-        flickScrollView.scrollRectToVisible(imageView.frame, animated: true)
+        flickScrollView.scrollRectToVisible(flick.flickImageView.frame, animated: true)
     }
     
     // function to delete a flick
@@ -413,7 +399,7 @@ extension ViewController {
             // deletion for > 1 flick...default flick is not counted !!
             
             // get targetflick ImageView...the flick to scroll to after flick deletion
-            var targetFlick: (String, UIImageView)!
+            var targetFlick: Flick!
             if index == (flicksArray.count - 1) {
                 targetFlick = flicksArray[index - 1]
             }
@@ -422,15 +408,15 @@ extension ViewController {
             }
             
             // scroll to next flick, targetFlick prior to deletion..aesthetics
-            self.flickScrollView.scrollRectToVisible(targetFlick.1.frame, animated: true)
+            self.flickScrollView.scrollRectToVisible(targetFlick.flickImageView.frame, animated: true)
             
             // after scrolling to next flick, handle actual flick deletion
-            Timer.scheduledTimer(withTimeInterval: 0.75, repeats: false) {
+            Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false) {
                 _ in
                 
                 // remove flick from array and scrollView...re-layout scrollView
+                flick.flickImageView.removeFromSuperview()
                 self.flicksArray.remove(at: index)
-                flick.1.removeFromSuperview()
                 self.layoutFlickScrollView(scrollToFlick: targetFlick)
                 
                 // done with deletion...re-enable user interaction
@@ -445,20 +431,21 @@ extension ViewController {
             
             // dim imageView
             UIView.animate(withDuration: 0.2) {
-                flick.1.alpha = 0.0
+                flick.flickImageView.alpha = 0.0
             }
             
             Timer.scheduledTimer(withTimeInterval: 0.21, repeats: false) {
                 _ in
                 
                 // remove flick from array and scrollView...re-layout scrollView
+                flick.flickImageView.removeFromSuperview()
                 self.flicksArray.remove(at: index)
-                flick.1.removeFromSuperview()
                 self.layoutFlickScrollView()
-
-                // done with deletion...re-enable user interaction
+                
+                // done with deletion...re-enable user interaction, set title
                 self.flickScrollView.isUserInteractionEnabled = true
                 self.flickTitleLabel.alpha = 1.0
+                self.flickTitleLabel.text = self.flicksArray.first?.title
             }
         }
     }
@@ -466,28 +453,28 @@ extension ViewController {
     // helper function..layout subviews
     // landingImageView is an optional to indicate which view to scroll to
     // upon completion of layout
-    func layoutFlickScrollView(scrollToFlick: (String, UIImageView)? = nil) {
+    func layoutFlickScrollView(scrollToFlick: Flick? = nil) {
         
         /*
          Default flick is at location 0
          If more than one flick, the first flick is placed
          on top of default flick, and the default flick is
          set to hidden
-        */
+         */
         
         // get default image, create startIndex for iteration
-        let flicks = flicksArray[0]
+        let defaultFlick = flicksArray[0]
         var startIndex = 0
         
-        // test for > 1 flick (there is default image and one or more flicks
+        // test for > 1 flick ... defaultFlick doesn't count !!
         if flicksArray.count > 1 {
             //flicks present, increment startIndex, hide default flick
             startIndex += 1
-            flicks.1.isHidden = true
+            defaultFlick.flickImageView.isHidden = true
         }
         else {
             // only one flick, which is default flick
-            flicks.1.isHidden = false
+            defaultFlick.flickImageView.isHidden = false
         }
         
         // get frame and create a size with zero with...will accum width as views are set
@@ -498,7 +485,7 @@ extension ViewController {
         // place flicks in sv...set contentSize when complete
         for index in startIndex..<flicksArray.count {
             let flick = flicksArray[index]
-            flick.1.frame = frame
+            flick.flickImageView.frame = frame
             frame.origin.x += frame.size.width
             size.width += frame.size.width
         }
@@ -506,8 +493,8 @@ extension ViewController {
         
         // test for scrollToImageView...scroll to this flick if provided
         if let flick = scrollToFlick {
-            flickScrollView.scrollRectToVisible(flick.1.frame, animated: false)
-            flickTitleLabel.text = flick.0
+            flickScrollView.scrollRectToVisible(flick.flickImageView.frame, animated: false)
+            flickTitleLabel.text = flick.title
         }
     }
 }
@@ -520,7 +507,7 @@ extension ViewController: UIScrollViewDelegate {
         // flickScrollView has stopped scrolling...update flickTitleLabel
         // to show title of current flick
         let index = indexOfVisibleFlick()
-        flickTitleLabel.text = flicksArray[index].0
+        flickTitleLabel.text = flicksArray[index].title
         
         // restore alpha of titleLabel
         flickTitleLabel.alpha = 1.0
