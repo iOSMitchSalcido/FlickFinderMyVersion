@@ -24,7 +24,7 @@ class ViewController: UIViewController {
     @IBOutlet weak var longitudeTextField: UITextField!     // lon: Geo flick search text
     @IBOutlet weak var latitudeTextField: UITextField!      // lat: Geo flick search text
     @IBOutlet weak var phraseSearchButton: UIButton!        // invoke search by text phrase
-    @IBOutlet weak var locationsButton: UIButton!           //TODO: !! WORK IN PROGRESS !!
+    @IBOutlet weak var locationsButton: UIButton!           // TODO: !! WORK IN PROGRESS !!
     @IBOutlet weak var geoSearchButton: UIButton!           // invoke search by geo
     
     // trash to delete flick
@@ -39,7 +39,7 @@ class ViewController: UIViewController {
     // to be shifted down by ~navBar and statusbar heights...
     var flickScrollView: UIScrollView!
     
-    // maintain flicks in flicksScrollView as tuple, title and imageView
+    // store to maintain flicks in flicksScrollView
     var flicksArray = [Flick]()
     
     // animate when searching....
