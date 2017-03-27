@@ -240,6 +240,12 @@ extension ViewController {
             // disable search buttons while editing text
             phraseSearchButton.isEnabled = false
             geoSearchButton.isEnabled = false
+            
+            // trash
+            trashBbi.isEnabled = false
+            
+            // scrollView
+            flickScrollView.isUserInteractionEnabled = false
         }
     }
     
@@ -253,6 +259,14 @@ extension ViewController {
             // done entering text, ok to enable search buttons
             phraseSearchButton.isEnabled = true
             geoSearchButton.isEnabled = true
+            
+            // trash
+            if flicksArray.count > 1 {
+                trashBbi.isEnabled = true
+            }
+            
+            // scrollView
+            flickScrollView.isUserInteractionEnabled = true
         }
     }
     
@@ -285,6 +299,7 @@ extension ViewController {
         self.phraseTextField.isUserInteractionEnabled = enable
         self.latitudeTextField.isUserInteractionEnabled = enable
         self.longitudeTextField.isUserInteractionEnabled = enable
+        self.trashBbi.isEnabled = (self.flicksArray.count > 1) && enable
     }
     
     // helper function, return search text from phrase text field
