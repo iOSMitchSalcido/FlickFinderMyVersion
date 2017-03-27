@@ -38,18 +38,14 @@ class ViewController: UIViewController {
     // ...don't like doing this way. When I add sv in storyBoard, views in sc seem
     // to be shifted down by ~navBar and statusbar heights...
     var flickScrollView: UIScrollView!
-
-    // store imageView's that are in flickScrollView, also title
-    var imageViewArray = [UIImageView]()
-    var imageTitleArray = [String]()
     
-    var images = [(String, UIImageView)]()
+    // maintain flicks in flicksScrollView as tuple, title and imageView
+    var flicksArray = [(String, UIImageView)]()
     
     // animate when searching....
     var activityIndicator: UIActivityIndicatorView!
 
     // when no images are available
-    var defaultImageView: UIImageView!
     var defaultTitle = "Search For Flicks !"
     
     // ref to API
@@ -77,13 +73,8 @@ class ViewController: UIViewController {
         activityIndicator.frame.origin.y = backgroundView.bounds.size.height / 2.0 - activityIndicator.frame.height / 2.0
         backgroundView.addSubview(activityIndicator)
 
-        // default image.. shown when no Flicks
-        defaultImageView = UIImageView()
-        defaultImageView.contentMode = .scaleAspectFit
-        defaultImageView.image = UIImage(named: "DefaultImage")
-        imageViewArray.append(defaultImageView)
-        flickScrollView.addSubview(defaultImageView)
-        layoutFlickScrollView()
+        // initial load default image
+        addFlick(nil)        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -180,7 +171,7 @@ class ViewController: UIViewController {
                     //dispatch
                     DispatchQueue.main.async {
                         // update flick sv
-                        self.addFlick(title: key, flick: value)
+                        self.addFlick((key, value))
                     }
                 }
             }
@@ -206,6 +197,7 @@ class ViewController: UIViewController {
     }
     
     func trashBbiPressed(_ sender: UIBarButtonItem) {
+        removeFlickAt(index: indexOfVisibleFlick())
     }
 }
 
@@ -349,96 +341,174 @@ extension ViewController {
 // flickScrollView functions
 extension ViewController {
 
-    // helper method to layout views in flickScrollView
-    func updateScrollView() {
-
-        // test imageViews in array... Add to flickScrollView if not currently in it's superView
-        // ...imageView is added to array in closure for flick search..see function below
-        for imageView in imageViewArray {
-            if imageView.superview == nil {
-                trashBbi.isEnabled = true
-                flickScrollView.addSubview(imageView)
-            }
-        }
-
-        // test if a flick is present...remove defaultImage
-        if imageViewArray.count == 2 && imageViewArray.first == defaultImageView {
-            let iv = imageViewArray.removeFirst()
-            iv.removeFromSuperview()
-        }
-
-        // layout frames in flickScrollView
-        flickScrollView.frame = backgroundView.bounds
-        var frame = flickScrollView.bounds
-        frame.origin = CGPoint(x: 0, y: 0)
-        var size = CGSize(width: 0, height: frame.size.height)
-        for imageView in imageViewArray {
-            imageView.frame = frame
-            frame.origin.x += frame.size.width
-            size.width += frame.size.width
-        }
-        flickScrollView.contentSize = size
-
-        // scroll to last added imageView
-        frame.origin.x -= frame.size.width
-        flickScrollView.scrollRectToVisible(frame, animated: true)
-    }
-
     // function to return the index of the visible view in sv
-    func indexOfVisibleView() -> Int {
+    func indexOfVisibleFlick() -> Int {
+        
         // determine index of visible imageView in sv
         let xOffset = flickScrollView.contentOffset.x
         let width = flickScrollView.frame.size.width
-        return Int(xOffset / width)
+        let index = Int(xOffset / width)
+        
+        // default flick is at location 0. If more that one flick then
+        // want non-default flick
+        if flicksArray.count > 1 {
+            return index + 1
+        }
+        return index
     }
     
     // function to add a new flick to scrollView
-    func addFlick(title: String, flick: UIImage) {
+    func addFlick(_ flick: (String, UIImage)?) {
         
-        // create imageView from image. Place in array and sv
+        // Add flick to scrollView. If nil tuple, then insert default flick/title
+        var flickTitle: String!
+        var flickImage: UIImage!
+        if let flick = flick {
+            flickTitle = flick.0
+            flickImage = flick.1
+        }
+        else {
+            flickTitle = defaultTitle
+            flickImage = UIImage(named: "DefaultImage")
+        }
+
+        // append flicksArray, add to flickScrollView
         let imageView = UIImageView()
-        imageView.image = flick
         imageView.contentMode = .scaleAspectFit
-        imageViewArray.append(imageView)
-        imageTitleArray.append(title)
+        imageView.image = flickImage
+        flicksArray.append((flickTitle, imageView))
         flickScrollView.addSubview(imageView)
         
-        // flick title
-        flickTitleLabel.text = title
+        // flickTitle
+        flickTitleLabel.text = flickTitle
         
-        // remove default imageView when first flick is added
-        if imageViewArray.count == 2 && imageViewArray.first == defaultImageView {
-            let iv = imageViewArray.removeFirst()
-            imageTitleArray.removeFirst()
-            iv.removeFromSuperview()
-            
-            // also enable trash
-            trashBbi.isEnabled = true
-        }
+        // trash
+        trashBbi.isEnabled = flicksArray.count > 1
         
         // layout frames in flickScrollView
         layoutFlickScrollView()
         
         // scroll to last added imageView
-        var frame = flickScrollView.bounds
-        frame.origin = CGPoint(x: 0, y: 0)
-        frame.origin.x = frame.size.width * CGFloat(imageViewArray.count - 1)
-        flickScrollView.scrollRectToVisible(frame, animated: true)
+        flickScrollView.scrollRectToVisible(imageView.frame, animated: true)
+    }
+    
+    // function to delete a flick
+    func removeFlickAt(index: Int) {
+        
+        // get flick
+        let flick = flicksArray[index]
+        
+        // dim flickTitle for aesthetics while deleting
+        flickTitleLabel.alpha = 0.3
+        
+        // disable scrollView while deletion is happening
+        flickScrollView.isUserInteractionEnabled = false
+        
+        // disbale trashBbi until this operation is complete
+        trashBbi.isEnabled = false
+        
+        // test for flick count
+        if flicksArray.count > 2 {
+            
+            // deletion for > 1 flick...default flick is not counted !!
+            
+            // get targetflick ImageView...the flick to scroll to after flick deletion
+            var targetFlick: (String, UIImageView)!
+            if index == (flicksArray.count - 1) {
+                targetFlick = flicksArray[index - 1]
+            }
+            else {
+                targetFlick = flicksArray[index + 1]
+            }
+            
+            // scroll to next flick, targetFlick prior to deletion..aesthetics
+            self.flickScrollView.scrollRectToVisible(targetFlick.1.frame, animated: true)
+            
+            // after scrolling to next flick, handle actual flick deletion
+            Timer.scheduledTimer(withTimeInterval: 0.75, repeats: false) {
+                _ in
+                
+                // remove flick from array and scrollView...re-layout scrollView
+                self.flicksArray.remove(at: index)
+                flick.1.removeFromSuperview()
+                self.layoutFlickScrollView(scrollToFlick: targetFlick)
+                
+                // done with deletion...re-enable user interaction
+                self.flickScrollView.isUserInteractionEnabled = true
+                self.flickTitleLabel.alpha = 1.0
+                self.trashBbi.isEnabled = true
+            }
+        }
+        else {
+            
+            // deletion for last flick in array...default flick not counted !!
+            
+            // dim imageView
+            UIView.animate(withDuration: 0.2) {
+                flick.1.alpha = 0.0
+            }
+            
+            Timer.scheduledTimer(withTimeInterval: 0.21, repeats: false) {
+                _ in
+                
+                // remove flick from array and scrollView...re-layout scrollView
+                self.flicksArray.remove(at: index)
+                flick.1.removeFromSuperview()
+                self.layoutFlickScrollView()
+
+                // done with deletion...re-enable user interaction
+                self.flickScrollView.isUserInteractionEnabled = true
+                self.flickTitleLabel.alpha = 1.0
+            }
+        }
     }
     
     // helper function..layout subviews
-    func layoutFlickScrollView() {
+    // landingImageView is an optional to indicate which view to scroll to
+    // upon completion of layout
+    func layoutFlickScrollView(scrollToFlick: (String, UIImageView)? = nil) {
         
-        // layout frames in flickScrollView
+        /*
+         Default flick is at location 0
+         If more than one flick, the first flick is placed
+         on top of default flick, and the default flick is
+         set to hidden
+        */
+        
+        // get default image, create startIndex for iteration
+        let flicks = flicksArray[0]
+        var startIndex = 0
+        
+        // test for > 1 flick (there is default image and one or more flicks
+        if flicksArray.count > 1 {
+            //flicks present, increment startIndex, hide default flick
+            startIndex += 1
+            flicks.1.isHidden = true
+        }
+        else {
+            // only one flick, which is default flick
+            flicks.1.isHidden = false
+        }
+        
+        // get frame and create a size with zero with...will accum width as views are set
         var frame = flickScrollView.bounds
         frame.origin = CGPoint(x: 0, y: 0)
         var size = CGSize(width: 0, height: frame.size.height)
-        for imageView in imageViewArray {
-            imageView.frame = frame
+        
+        // place flicks in sv...set contentSize when complete
+        for index in startIndex..<flicksArray.count {
+            let flick = flicksArray[index]
+            flick.1.frame = frame
             frame.origin.x += frame.size.width
             size.width += frame.size.width
         }
         flickScrollView.contentSize = size
+        
+        // test for scrollToImageView...scroll to this flick if provided
+        if let flick = scrollToFlick {
+            flickScrollView.scrollRectToVisible(flick.1.frame, animated: false)
+            flickTitleLabel.text = flick.0
+        }
     }
 }
 
@@ -446,10 +516,19 @@ extension ViewController {
 extension ViewController: UIScrollViewDelegate {
     
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        
+        // flickScrollView has stopped scrolling...update flickTitleLabel
+        // to show title of current flick
+        let index = indexOfVisibleFlick()
+        flickTitleLabel.text = flicksArray[index].0
+        
+        // restore alpha of titleLabel
         flickTitleLabel.alpha = 1.0
     }
     
     func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
-        flickTitleLabel.alpha = 0.5
+        
+        // starting to scroll flickScrollView...dim title while scrolling...aesthetics
+        flickTitleLabel.alpha = 0.3
     }
 }
