@@ -236,6 +236,10 @@ extension ViewController {
         // shift view to keep textFields visible while editing
         if self.view.superview?.frame.origin.y == 0.0 {
             self.view.superview?.frame.origin.y -= keyboardHeight(notification)
+            
+            // disable search buttons while editing text
+            phraseSearchButton.isEnabled = false
+            geoSearchButton.isEnabled = false
         }
     }
     
@@ -245,6 +249,10 @@ extension ViewController {
         // return view to normal y origin
         if (self.view.superview?.frame.origin.y)! < 0.0 {
             self.view.superview?.frame.origin.y -= (self.view.superview?.frame.origin.y)!
+            
+            // done entering text, ok to enable search buttons
+            phraseSearchButton.isEnabled = true
+            geoSearchButton.isEnabled = true
         }
     }
     
@@ -274,6 +282,9 @@ extension ViewController {
         self.phraseSearchButton.isEnabled = enable
         self.geoSearchButton.isEnabled = enable
         self.locationsButton.isEnabled = enable
+        self.phraseTextField.isUserInteractionEnabled = enable
+        self.latitudeTextField.isUserInteractionEnabled = enable
+        self.longitudeTextField.isUserInteractionEnabled = enable
     }
     
     // helper function, return search text from phrase text field
