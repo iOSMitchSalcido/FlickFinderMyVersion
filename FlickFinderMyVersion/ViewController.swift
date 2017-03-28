@@ -197,6 +197,13 @@ class ViewController: UIViewController {
         present(nc, animated: true, completion: nil)
     }
     
+    // tap to dismiss keyboard
+    @IBAction func tapDetected(_ sender: UITapGestureRecognizer) {
+        
+        // force tf's to resign
+        view.endEditing(true)
+    }
+    
     func trashBbiPressed(_ sender: UIBarButtonItem) {
         removeFlickAt(index: indexOfVisibleFlick())
     }

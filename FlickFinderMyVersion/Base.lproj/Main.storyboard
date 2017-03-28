@@ -37,6 +37,10 @@
                                                     </activityIndicatorView>
                                                 </subviews>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                                <gestureRecognizers/>
+                                                <connections>
+                                                    <outletCollection property="gestureRecognizers" destination="buV-vE-BjC" appends="YES" id="7Ph-8a-RkP"/>
+                                                </connections>
                                             </view>
                                         </subviews>
                                     </stackView>
@@ -153,6 +157,11 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+                <tapGestureRecognizer id="buV-vE-BjC">
+                    <connections>
+                        <action selector="tapDetected:" destination="BYZ-38-t0r" id="z9c-NE-cnm"/>
+                    </connections>
+                </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="1031.25" y="34.859154929577464"/>
         </scene>
