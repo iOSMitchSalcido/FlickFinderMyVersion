@@ -204,6 +204,7 @@ class ViewController: UIViewController {
         view.endEditing(true)
     }
     
+    // delete flick currently in sv
     func trashBbiPressed(_ sender: UIBarButtonItem) {
         removeFlickAt(index: indexOfVisibleFlick())
     }
@@ -282,7 +283,7 @@ extension ViewController {
         
         let userInfo = notification.userInfo
         let frame = userInfo?[UIKeyboardFrameEndUserInfoKey] as! NSValue
-        return frame.cgRectValue.size.height / 1.5
+        return frame.cgRectValue.size.height / 1.3
     }
 }
 
