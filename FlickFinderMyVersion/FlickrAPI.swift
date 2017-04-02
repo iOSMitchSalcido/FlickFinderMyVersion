@@ -35,7 +35,7 @@ struct FlickrAPI {
                       "safe_search": "1"]
     
     // public search method
-    func searchForFlick(phrase: String?, bbox: String?, completion: @escaping (Errors?, [[String:UIImage]]?) -> Void) {
+    func searchForFlick(phrase: String?, bbox: String?, completion: @escaping (Errors?, (String, UIImage)?) -> Void) {
         
         /*
          set phase search and bbox (geo) search params. Then test that both are non-nil before continuing search
@@ -62,7 +62,7 @@ struct FlickrAPI {
 extension FlickrAPI {
     
     // flickr search method
-    fileprivate func flickrSearch(_ params: [String: String], completion: @escaping (Errors?, [[String:UIImage]]?) -> Void) {
+    fileprivate func flickrSearch(_ params: [String: String], completion: @escaping (Errors?, (String, UIImage)?) -> Void) {
         
         // get url from params and create data task
         let request = urlForMethods(params)
@@ -187,7 +187,7 @@ extension FlickrAPI {
                 
                 // now have good image (Flick) and photo title
                 // fire completion using nil error and a dictionary created from title and image
-                completion(nil, [[flickrPhotoTitle: image]])
+                completion(nil, (flickrPhotoTitle, image))
             }
         }
         task.resume()

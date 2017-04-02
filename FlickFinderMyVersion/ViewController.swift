@@ -118,7 +118,7 @@ class ViewController: UIViewController {
         
         // api call
         api.searchForFlick(phrase: phrase, bbox: bbox) {
-            (error, images) in
+            (error, imageData) in
             
             // completion
             
@@ -163,13 +163,10 @@ class ViewController: UIViewController {
             else {
                 
                 // no error..continue with presenting flickr image
-                
-                // get dictionary from images dictionary
-                let dict = images?.last
-                for (key, value) in  dict! {
+                if let imageData = imageData {
                     
-                    let flick = Flick(title: key, image: value)
-                    //dispatch
+                    // create Flick, dispatch
+                    let flick = Flick(title: imageData.0, image: imageData.1)
                     DispatchQueue.main.async {
                         // update flick sv
                         self.addFlick(flick)
