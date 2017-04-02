@@ -375,9 +375,13 @@ extension ViewController {
             return false
         }
         
+        // pull degrees symbol from textField text
+        let newLon = (longitudeTextField.text! as NSString).replacingOccurrences(of: "°", with: "") as String
+        let newLat = (latitudeTextField.text! as NSString).replacingOccurrences(of: "°", with: "") as String
+    
         // verify valid floats in textFields
-        guard let lat = Float(latitudeTextField.text!),
-        let lon = Float(longitudeTextField.text!) else {
+        guard let lat = Float(newLat),
+        let lon = Float(newLon) else {
             return nil
         }
     
