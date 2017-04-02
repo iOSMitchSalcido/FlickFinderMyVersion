@@ -290,8 +290,44 @@ extension ViewController {
 // handle textField delegate functions
 extension ViewController: UITextFieldDelegate {
     
+    // return button pressed
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
+        return true
+    }
+    
+    // insert "°" symbol at end of lon/lat
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        
+        // test for lon/lat
+        if textField == longitudeTextField || textField == latitudeTextField {
+            
+            // pull degree symbol and replace with empty string
+            var newText = (textField.text! as NSString).replacingOccurrences(of: "°", with: "") as String
+            
+            if string == "" {
+                // back space/delete key pressed
+
+                // remove last character is now empty
+                if !newText.isEmpty {
+                    let index = newText.index(before: newText.endIndex)
+                    newText.remove(at: index)
+                }
+                
+                // test if still not empty..add degree symbol
+                if !newText.isEmpty {
+                    newText.append("°")
+                }
+            }
+            else {
+                // numeral (or decimal point) pressed. Append and also append with degrees symbol
+                newText.append(string + "°")
+            }
+            
+            textField.text = newText
+            return false
+        }
+        
         return true
     }
 }
