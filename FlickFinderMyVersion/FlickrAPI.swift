@@ -19,6 +19,7 @@ struct FlickrAPI {
     enum Errors: Swift.Error {
         case searchItems(String)
         case dataTask(String)
+        case unavailableData(String)
     }
     
     // constants
@@ -114,7 +115,7 @@ extension FlickrAPI {
             
             // retrieve photo's dictionary..top level dictionary return by Flickr
             guard let photosDictionary = jsonData["photos"] as? [String: AnyObject] else {
-                completion(Errors.dataTask("No Flicks returned from Flickr."), nil)
+                completion(Errors.unavailableData("No photos returned from Flickr."), nil)
                 return
             }
             
@@ -125,8 +126,8 @@ extension FlickrAPI {
                 
                 // get pages and photos/page that was returned in search
                 guard let pages = photosDictionary["pages"] as? Int,
-                    let perPage = photosDictionary["perpage"] as? Int else {
-                        completion(Errors.dataTask("No Flicks returned from Flickr."), nil)
+                    pages > 0, let perPage = photosDictionary["perpage"] as? Int else {
+                        completion(Errors.unavailableData("No photo pages returned from Flickr."), nil)
                         return
                 }
                 
@@ -147,8 +148,9 @@ extension FlickrAPI {
                 // Now have dictionary made up of photos from page generated above
                 
                 // get photos array
-                guard let photoArray = photosDictionary["photo"] as? [[String: AnyObject]] else {
-                    completion(Errors.dataTask("No Flicks returned from Flickr"), nil)
+                guard let photoArray = photosDictionary["photo"] as? [[String: AnyObject]],
+                photoArray.count > 0 else {
+                    completion(Errors.unavailableData("No photos returned from Flickr"), nil)
                     return
                 }
                 
@@ -164,7 +166,7 @@ extension FlickrAPI {
                 
                 // get image URL string
                 guard let imageUrlString = photoDictionary["url_m"] as? String else {
-                    completion(Errors.dataTask("No Flick's found."), nil)
+                    completion(Errors.unavailableData("No photos returned from Flickr."), nil)
                     return
                 }
                 

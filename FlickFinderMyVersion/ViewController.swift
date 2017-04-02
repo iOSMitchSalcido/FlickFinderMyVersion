@@ -141,6 +141,9 @@ class ViewController: UIViewController {
                     alertTitle = "Network error"
                     alertMessage = value
                     break
+                case .unavailableData(let value):
+                    alertTitle = "No Data Found"
+                    alertMessage = value
                 }
                 
                 // create alert, action
