@@ -62,10 +62,14 @@ class ViewController: UIViewController {
         navigationItem.leftBarButtonItem = trashBbi
         
         // create/config flickScrollView.. add to backgroundView
-        flickScrollView = UIScrollView(frame: backgroundView.bounds)
+        flickScrollView = UIScrollView(frame: backgroundView.frame)
         flickScrollView.isPagingEnabled = true
         flickScrollView.delegate = self
         backgroundView.addSubview(flickScrollView)
+        flickScrollView.backgroundColor = UIColor.green
+        
+        print("bgView frame:\(backgroundView.frame)")
+        print("svIEw frame: \(flickScrollView.frame)")
         
         // create activityView..add to backgroundView
         activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
