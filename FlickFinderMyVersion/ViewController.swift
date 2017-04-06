@@ -56,9 +56,6 @@ class ViewController: UIViewController {
         
         // sv delegate
         flickScrollView.delegate = self
-
-        // initial load default image
-        addFlick(Flick(title: defaultTitle, image: UIImage(named: "DefaultImage")!))
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -67,6 +64,13 @@ class ViewController: UIViewController {
         // begin notifications...hide activityIndicator
         beginKeyboardNotifications()
         activityIndicator.isHidden = true
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        // initial load default image..problems with intial default view unless loaded in 'DidAppear
+        addFlick(Flick(title: defaultTitle, image: UIImage(named: "DefaultImage")!))
     }
     
     override func viewWillDisappear(_ animated: Bool) {
