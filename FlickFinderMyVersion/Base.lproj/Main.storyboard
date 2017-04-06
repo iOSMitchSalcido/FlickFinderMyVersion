@@ -31,9 +31,8 @@
                                             <view contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="ok2-FC-nUd">
                                                 <rect key="frame" x="0.0" y="0.0" width="343" height="437"/>
                                                 <subviews>
-                                                    <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="Giv-VA-UNY">
-                                                        <rect key="frame" x="126" y="151" width="37" height="37"/>
-                                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="Giv-VA-UNY">
+                                                        <rect key="frame" x="153" y="200" width="37" height="37"/>
                                                     </activityIndicatorView>
                                                     <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bDz-Gu-dGF">
                                                         <rect key="frame" x="0.0" y="0.0" width="343" height="437"/>
@@ -45,6 +44,8 @@
                                                     <constraint firstItem="bDz-Gu-dGF" firstAttribute="top" secondItem="ok2-FC-nUd" secondAttribute="top" id="7B6-1d-JEl"/>
                                                     <constraint firstAttribute="trailing" secondItem="bDz-Gu-dGF" secondAttribute="trailing" id="PcI-qa-pMy"/>
                                                     <constraint firstItem="bDz-Gu-dGF" firstAttribute="leading" secondItem="ok2-FC-nUd" secondAttribute="leading" id="TpK-kb-lw8"/>
+                                                    <constraint firstItem="Giv-VA-UNY" firstAttribute="centerY" secondItem="ok2-FC-nUd" secondAttribute="centerY" id="Yyz-w1-Ba4"/>
+                                                    <constraint firstItem="Giv-VA-UNY" firstAttribute="centerX" secondItem="ok2-FC-nUd" secondAttribute="centerX" id="a62-35-Yb8"/>
                                                     <constraint firstAttribute="bottom" secondItem="bDz-Gu-dGF" secondAttribute="bottom" id="pDf-Lt-zOd"/>
                                                 </constraints>
                                                 <connections>
@@ -156,6 +157,7 @@
                     </view>
                     <navigationItem key="navigationItem" title="Flick Finder" id="Zw2-5f-C49"/>
                     <connections>
+                        <outlet property="activityIndicator" destination="Giv-VA-UNY" id="AMl-Sf-8bt"/>
                         <outlet property="backgroundView" destination="ok2-FC-nUd" id="Jut-7z-hFr"/>
                         <outlet property="flickScrollView" destination="bDz-Gu-dGF" id="H5x-4t-MRV"/>
                         <outlet property="flickTitleLabel" destination="oc5-WR-VT6" id="Jq3-Pv-rIp"/>

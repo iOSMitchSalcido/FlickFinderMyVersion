@@ -27,6 +27,7 @@ class ViewController: UIViewController {
     @IBOutlet weak var locationsButton: UIButton!           // TODO: !! WORK IN PROGRESS !!
     @IBOutlet weak var geoSearchButton: UIButton!           // invoke search by geo
     @IBOutlet weak var flickScrollView: UIScrollView!       // container for Flicks
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!  // indicate when searching Flickr for photos
     
     // trash to delete flick
     var trashBbi: UIBarButtonItem!
@@ -36,9 +37,6 @@ class ViewController: UIViewController {
     
     // store to maintain flicks in flicksScrollView
     var flicksArray = [Flick]()
-    
-    // animate when searching....
-    var activityIndicator: UIActivityIndicatorView!
 
     // when no images are available
     var defaultTitle = "Search For Flicks !"
@@ -56,23 +54,8 @@ class ViewController: UIViewController {
         trashBbi.isEnabled = false
         navigationItem.leftBarButtonItem = trashBbi
         
-        /*
-        // create/config flickScrollView.. add to backgroundView
-        flickScrollView = UIScrollView(frame: backgroundView.frame)
-        flickScrollView.isPagingEnabled = true
-        backgroundView.addSubview(flickScrollView)
-        flickScrollView.backgroundColor = UIColor.green
-        */
+        // sv delegate
         flickScrollView.delegate = self
-
-        print("bgView frame:\(backgroundView.frame)")
-        print("svIEw frame: \(flickScrollView.frame)")
-        
-        // create activityView..add to backgroundView
-        activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
-        activityIndicator.frame.origin.x = backgroundView.bounds.size.width / 2.0 - activityIndicator.frame.width / 2.0
-        activityIndicator.frame.origin.y = backgroundView.bounds.size.height / 2.0 - activityIndicator.frame.height / 2.0
-        backgroundView.addSubview(activityIndicator)
 
         // initial load default image
         addFlick(Flick(title: defaultTitle, image: UIImage(named: "DefaultImage")!))
