@@ -34,7 +34,7 @@
                                                     <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="Giv-VA-UNY">
                                                         <rect key="frame" x="153" y="200" width="37" height="37"/>
                                                     </activityIndicatorView>
-                                                    <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bDz-Gu-dGF">
+                                                    <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" pagingEnabled="YES" showsVerticalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bDz-Gu-dGF">
                                                         <rect key="frame" x="0.0" y="0.0" width="343" height="437"/>
                                                     </scrollView>
                                                 </subviews>
