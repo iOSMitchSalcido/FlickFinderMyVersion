@@ -26,18 +26,13 @@ class ViewController: UIViewController {
     @IBOutlet weak var phraseSearchButton: UIButton!        // invoke search by text phrase
     @IBOutlet weak var locationsButton: UIButton!           // TODO: !! WORK IN PROGRESS !!
     @IBOutlet weak var geoSearchButton: UIButton!           // invoke search by geo
+    @IBOutlet weak var flickScrollView: UIScrollView!       // container for Flicks
     
     // trash to delete flick
     var trashBbi: UIBarButtonItem!
     
     // container for flickScrollView and activityView
     @IBOutlet weak var backgroundView: UIView!
-    
-    // viewer for flicks in scrolling format
-    // adding programmatically..need to review autoLayout
-    // ...don't like doing this way. When I add sv in storyBoard, views in sc seem
-    // to be shifted down by ~navBar and statusbar heights...
-    var flickScrollView: UIScrollView!
     
     // store to maintain flicks in flicksScrollView
     var flicksArray = [Flick]()
@@ -61,13 +56,15 @@ class ViewController: UIViewController {
         trashBbi.isEnabled = false
         navigationItem.leftBarButtonItem = trashBbi
         
+        /*
         // create/config flickScrollView.. add to backgroundView
         flickScrollView = UIScrollView(frame: backgroundView.frame)
         flickScrollView.isPagingEnabled = true
-        flickScrollView.delegate = self
         backgroundView.addSubview(flickScrollView)
         flickScrollView.backgroundColor = UIColor.green
-        
+        */
+        flickScrollView.delegate = self
+
         print("bgView frame:\(backgroundView.frame)")
         print("svIEw frame: \(flickScrollView.frame)")
         
